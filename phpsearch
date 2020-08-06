@@ -386,21 +386,28 @@ function phpsearch() {
         $orig = substr($orig, 1); // remove colon (force index to be string)
         $x = stripos($rawline, $orig);
         while ($x !== false) {
-          $csamp = substr($rawline, $x-1, strlen($orig) + 2);
-          $msamp = substr($mline, $x-1, strlen($orig) + 2);
-          $ch = substr($csamp,0,1);
-          if ((substr($msamp,0,1) != ' ')
-          || !(
-            (($ch >= '0') && ($ch <= '9'))
-            ||
-            (($ch >= 'a') && ($ch <= 'z'))
-            ||
-            (($ch >= 'A') && ($ch <= 'Z'))
-            || ($ch == '_')
-          )) {
+          if ($x == 0) {
+            // begining of line exception
+            $csamp = substr($rawline, $x, strlen($orig) + 1);
+            $msamp = substr($mline, $x, strlen($orig) + 1);
             $x++;
-            $csamp = substr($csamp, 1);
-            $msamp = substr($msamp, 1);
+          } else {
+            $csamp = substr($rawline, $x-1, strlen($orig) + 2);
+            $msamp = substr($mline, $x-1, strlen($orig) + 2);
+            $ch = substr($csamp,0,1);
+            if ((substr($msamp,0,1) != ' ')
+            || !(
+              (($ch >= '0') && ($ch <= '9'))
+              ||
+              (($ch >= 'a') && ($ch <= 'z'))
+              ||
+              (($ch >= 'A') && ($ch <= 'Z'))
+              || ($ch == '_')
+            )) {
+              $x++;
+              $csamp = substr($csamp, 1);
+              $msamp = substr($msamp, 1);
+            }
           }
 
           $ch = substr($csamp, strlen($csamp)-1, 1);
